@@ -23,12 +23,60 @@ async function getPosts() {
         const posts: unknown = response.data;
 
         // Type Validation
-        // if (validatePosts(posts)) {
-        //     renderPosts(posts);
-        // }
+        if (validatePosts(posts)) {
+            renderPosts(posts);
+        } else {
+            console.error('posts did not have the right type: ', posts);
+        }
     } catch (error) {
         console.error(error);
     }
+}
+
+// Type Assertion
+// function assertPosts(data: unknown): asserts data is Post[] {
+//     if (!Array.isArray(data)) throw new Error();
+// }
+
+// Type Guards
+function validatePosts(data: unknown): data is Post[] {
+    if (!Array.isArray(data)) return false;
+
+    for (let item of data) {
+        if (!item.hasOwnProperty('id') || typeof item.id !== 'number') {
+            return false;
+        }
+
+        if (!item.hasOwnProperty('title') || typeof item.title !== 'string') {
+            return false;
+        }
+
+        if (!item.hasOwnProperty('body') || typeof item.body !== 'string') {
+            return false;
+        }
+
+        if (item.hasOwnProperty('comments') && !validateComments(item.comments)) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+function validateComments(data: unknown): data is Comment[] {
+    if (!Array.isArray(data)) return false;
+
+    for (let item of data) {
+        if (!item.hasOwnProperty('id') || typeof item.id !== 'number') {
+            return false;
+        }
+
+        if (!item.hasOwnProperty('message') || typeof item.message !== 'string') {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 getPosts();

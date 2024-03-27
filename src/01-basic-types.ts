@@ -32,7 +32,7 @@ const getFullName = (firstName: string, lastName: string, separator?: string) =>
 };
 
 // TS weiß, dass fullName ein String ist, weil es den Return-Wert von getFullName erkennt
-const fullName = getFullName('philip', 'braunen', '_');
+const fullName = getFullName('philip', 'braunen');
 
 const getUsername = (user: { username: string }) => {
     return user.username;
@@ -49,11 +49,16 @@ const getUsername = (user: { username: string }) => {
 }
 
 {
-    type User =
-        | { isSignedIn: false; username: undefined }
-        | { isSignedIn: true; username: string };
+    type User = { isSignedIn: false } | { isSignedIn: true; username: string };
 
     const getUsername = (user: User): string => {
         return user.isSignedIn ? user.username : 'Unknown';
     };
+
+    const user = {
+        isSignedIn: true,
+        username: 'test'
+    };
+
+    getUsername(user);
 }
