@@ -86,4 +86,139 @@ function sayHello<T extends Person>(person: T): void {
 
 sayHello({ name: 'Simon' });
 
+const getValueFromObject = (object: Record<string, any>, key: string) => {
+    return object[key];
+};
+
+type Card = {
+    /** Farbe */
+    suit: string;
+    /** 2..10, Jack, Queen, King, Ace */
+    rank: string;
+    value: number;
+};
+
+const deck: Array<Card> = [{ rank: 'Ace', suit: 'Spades', value: 11 }];
+
+const card: Card = deck[0];
+
+// const color = getValueFromObject(card, 'color'); // ist falsch
+
+{
+    const getValueFromObject = <Object extends {}>(object: Object, key: keyof Object) => {
+        return object[key];
+    };
+
+    const color = getValueFromObject(card, 'suit');
+}
+
+{
+    const getValueFromObject = <Object extends {}, Key extends keyof Object>(
+        object: Object,
+        key: Key
+    ) => {
+        return object[key];
+    };
+
+    const suit = getValueFromObject(card, 'suit');
+}
+
+const clamp = <Min extends number, Max extends number>(
+    number: number,
+    bounds: [Min, Max]
+) => {
+    const [min, max] = bounds;
+    return Math.min(Math.max(number, min), max);
+};
+
+const clamped = clamp(100, [0, 50]);
+
+// as -> Type Assertions
+const typedObjectKeys = <T extends {}>(object: T) => {
+    // As nur sehr selten benutzen
+    const returnValue = Object.keys(object) as Array<keyof T>;
+    return returnValue;
+};
+
+let keys = typedObjectKeys(card);
+
+// Default Typen für Generics
+const createSet = <T = string>() => {
+    return new Set<T>();
+};
+
+const numberSet = createSet<number>();
+const stringSet = createSet<string>();
+
+const otherStringSet = createSet();
+
+class Test<T> {
+    private prop: T;
+
+    constructor(value: T) {
+        this.prop = value;
+    }
+}
+
+// as const
+const routes = {
+    home: '/',
+    users: '/users',
+    contact: '/contact',
+    admin: '/admin',
+    support: '/help'
+} as const;
+
+type RouteKey = keyof typeof routes;
+type Route = (typeof routes)[RouteKey];
+
+const goToRoute = (route: Route) => {
+    // window.location.href = route;
+};
+
+goToRoute('/users');
+
+const routesX = Object.freeze({
+    home: '/',
+    users: '/users',
+    contact: '/contact',
+    admin: '/admin',
+    support: '/help',
+    nested: {
+        route: '/nested-route'
+    }
+});
+
+routesX.nested.route = '/another-route';
+
+enum NotificationLevel {
+    Notice,
+    Warning,
+    Error,
+    Success
+}
+
+const sendNotification = (message: string, level: NotificationLevel) => {
+    //
+};
+
+sendNotification(
+    'You are not signed in. Please head over to the sign in page.',
+    NotificationLevel.Notice
+);
+
+{
+    const notificationLevels = ['notice', 'warning', 'error', 'success'] as const;
+    type NotificationLevel = (typeof notificationLevels)[number];
+
+    const sendNotification = (message: string, level: NotificationLevel) => {
+        //
+    };
+
+    sendNotification(
+        'You are not signed in. Please head over to the sign in page.',
+        'warning'
+    );
+}
+
 export {};
