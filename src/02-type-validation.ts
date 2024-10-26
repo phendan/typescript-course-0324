@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+const html = String.raw;
+
 // const posts = [
 //     { id: 1, title: 'Post 1', body: 'post 1 body' },
 //     { id: 2, title: 'Post 2', body: 'post 2 body' },
@@ -98,13 +100,13 @@ function renderPosts(posts: Post[]) {
         .map(post => {
             const comments = post.comments ? renderComments(post.comments) : '';
 
-            return `
-            <article id="post-${post.id}">
-                <h2>${post.title}</h2>
-                <p>${post.body}</p>
-                ${comments}
-            </article>
-        `;
+            return html`
+                <article id="post-${post.id}">
+                    <h2>${post.title}</h2>
+                    <p>${post.body}</p>
+                    ${comments}
+                </article>
+            `;
         })
         .join('');
 
@@ -114,7 +116,7 @@ function renderPosts(posts: Post[]) {
 function renderComments(comments: Comment[]) {
     const commentElements = comments
         .map(comment => {
-            return `
+            return html`
                 <li id="comment-${comment.id}">
                     <p>${comment.message}</p>
                 </li>
@@ -122,7 +124,9 @@ function renderComments(comments: Comment[]) {
         })
         .join('');
 
-    const commentList = `<ul>${commentElements}</ul>`;
+    const commentList = html`<ul>
+        ${commentElements}
+    </ul>`;
 
     return commentList;
 }

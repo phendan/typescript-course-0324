@@ -11,6 +11,8 @@ type VideoTypes =
     | { extension: 'webm'; mimeType: 'video/webm' }
     | { extension: 'avi'; mimeType: 'video/x-msvideo' };
 
+type b = true & false;
+
 // Type Intersection
 type Video = VideoTypes & {
     resolution: Dimensions;
